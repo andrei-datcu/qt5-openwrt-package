@@ -9,11 +9,11 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=qt5
-PKG_VERSION:=5.8
-PKG_RELEASE:=0
-PKG_MD5SUM:=a9f2494f75f966e2f22358ec367d8f41
+PKG_VERSION:=5.9
+PKG_RELEASE:=7
+PKG_MD5SUM:=70e617aeb1f9bbf84a12b8cf09b01ece
 
-PKG_SOURCE:=qt-everywhere-opensource-src-$(PKG_VERSION).$(PKG_RELEASE).tar.gz
+PKG_SOURCE:=qt-everywhere-opensource-src-$(PKG_VERSION).$(PKG_RELEASE).tar.xz
 PKG_SOURCE_URL:=http://download.qt-project.org/archive/qt/$(PKG_VERSION)/$(PKG_VERSION).$(PKG_RELEASE)/single
 PKG_BUILD_DIR=$(BUILD_DIR)/qt-everywhere-opensource-src-$(PKG_VERSION).$(PKG_RELEASE)
 PKG_BUILD_PARALLEL:=1
@@ -37,7 +37,7 @@ define Package/qt5/Default
   SUBMENU:=Qt5
   TITLE:=qt5
   URL:=http://qt-project.org
-  DEPENDS:=+librt +zlib +libstdcpp +libpthread @!LINUX_2_6
+  DEPENDS:=+librt +zlib +libstdcpp +libpthread +libatomic @!LINUX_2_6
 endef
 
 define Package/qt5-core
@@ -158,7 +158,7 @@ define Build/Compile
 	STAGING_DIR="$(STAGING_DIR)" \
 	STAGING_DIR_HOST="$(STAGING_DIR)/../host" \
 	PKG_CONFIG_SYSROOT="$(STAGING_DIR)" \
-	$(MAKE) -C $(PKG_BUILD_DIR)
+	$(MAKE) -j5 -C $(PKG_BUILD_DIR)
 endef
 
 define Build/InstallDev
@@ -241,8 +241,4 @@ endef
 $(eval $(call BuildPackage,qt5-core))
 $(eval $(call BuildPackage,qt5-concurrent))
 $(eval $(call BuildPackage,qt5-network))
-$(eval $(call BuildPackage,qt5-widgets))
 $(eval $(call BuildPackage,qt5-sql))
-$(eval $(call BuildPackage,qt5-xml))
-$(eval $(call BuildPackage,qt5-xmlpatterns))
-$(eval $(call BuildPackage,qt5-test))
